@@ -1,3 +1,5 @@
+from var_dump import var_dump
+
 sh = input("Enter Hours: ")
 sr = input("Enter Rate: ")
 try:
@@ -7,7 +9,7 @@ except:
     print("Error, please enter numeric input")
     quit()
 
-print(fh, fr)
+var_dump(fh, fr)
 if fh > 40:
     reg = fh * fr
     otp = (fh - 40.0) * (fr * 0.5)
