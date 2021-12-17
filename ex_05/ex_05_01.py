@@ -8,7 +8,7 @@ while True:
     try:
         sum += float(number)
         count += 1
-    except:
+except:
         print("Invalid input")
         continue
 
