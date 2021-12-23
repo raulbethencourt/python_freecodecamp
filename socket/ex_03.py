@@ -1,5 +1,5 @@
 import urllib.request
-import urllib.parse 
+import urllib.parse
 import urllib.error
 from bs4 import BeautifulSoup
 import ssl
@@ -14,6 +14,10 @@ html = urllib.request.urlopen(url, context=ctx).read()
 soup = BeautifulSoup(html, "html.parser")
 
 # Retrive all
-tags = soup("a")
-for tag in tags:
-    print(tag.get("href", None))
+a_tags = soup("a")
+for a_tag in a_tags:
+    print(a_tag.get("href", None))
+
+p_tags = soup("p")
+for p_tag in p_tags:
+    print(p_tag.get_text())
