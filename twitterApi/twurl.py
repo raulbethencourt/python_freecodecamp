@@ -1,18 +1,32 @@
-from authlib.integrations.requests_client import OAuth1Auth
-import requests
+import urllib.request, urllib.parse, urllib.error
+import oauth
 import hidden
 
+# https://apps.twitter.com/
+# Create App and get the four strings, put them in hidden.py
 
-def augment(url, url_params):
+
+def augment(url, parameters):
     secrets = hidden.oauth()
+    consumer = oauth.OAuthConsumer(secrets["consumer_key"], secrets["consumer_secret"])
+    token = oauth.OAuthToken(secrets["token_key"], secrets["token_secret"])
 
-    auth = OAuth1Auth(
-        client_id=secrets["consumer_key"],
-        client_secret=secrets["consumer_secret"],
-        token=secrets["token_key"],
-        token_secret=secrets["token_secret"],
+    oauth_request = oauth.OAuthRequest.from_consumer_and_token(
+        consumer, token=token, http_method="GET", http_url=url, parameters=parameters
     )
+    oauth_request.sign_request(oauth.OAuthSignatureMethod_HMAC_SHA1(), consumer, token)
+    return oauth_request.to_url()
 
-    resp = requests.get(url, url_params, auth=auth)
 
-    return resp
+def test_me():
+    print("* Calling Twitter...")
+    url = augment(
+        "https://api.twitter.com/1.1/statuses/user_timeline.json",
+        {"screen_name": "drchuck", "count": "2"},
+    )
+    print(url)
+    connection = urllib.request.urlopen(url)
+    data = connection.read()
+    print(data)
+    headers = dict(connection.getheaders())
+    print(headers)
